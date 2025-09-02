@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Postman UI Clone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.1rem 2rem;
+      border-bottom: 1px solid black;
+    }
+    
+   
+    .auth-buttons button {
+      margin-left: 3rem;
+      padding: 1rem 1.5rem;
+      border: 1px solid black;
+      background: white;
+      cursor: pointer;
+      border-radius: 15px;
+      font-size: medium;
+      font-weight:bold;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+    .auth-buttons button:hover {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+  transition: all 0.3s ease;
+}
+    .auth-buttons .signup {
+      background-color:green;
+      color: white;
+      border: none;
+    }
+    main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3rem 5rem;
+    }
+    .main-content {
+      max-width: 700px;
+      margin-left:100px;
+    }
+    .main-content h1 {
+      font-size: 3.5rem;
+      margin-bottom: 3rem;
+      
+    }
+    .main-content h5{
+      font-weight:10;
+      font-size: 1.5rem;
+      color: black;
+      margin-bottom: 3rem;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+    .email-signup {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .email-signup input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid black;
+      border-radius: 4px;
+    }
+    .email-signup button {
+      background-color:green;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      
+    }
+    
+   
+    .illustration img {
+      width: 600px;
+    }
+    .div1 {
+  background: linear-gradient(135deg, #0c2019 0%, #358954 100%);
+  color: white;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.content-wrapper h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.content-wrapper p {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  opacity: 0.9;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.feature-item {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.feature-item h3 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.video-section {
+  padding: 4rem 2rem;
+  background: #f8f9fa;
+  text-align: center;
+}
+
+.video-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.video-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.video-container p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.main-footer {
+  background: linear-gradient(135deg, #0c2019 0%, #358954 100%);
+  color: white;
+  margin-top: 0;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem 0;
+}
+
+.footer-top {
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-brand h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.footer-brand p {
+  font-size: 1.1rem;
+  color: #bdc3c7;
+  max-width: 400px;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  background: #44c296;
+  transform: translateY(-2px);
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 3rem;
+  padding: 3rem 0;
+  border-bottom: 1px solid linear-gradient(135deg, #0c2019 0%, #358954 100%);
+}
+
+.footer-column h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin-bottom: 0.8rem;
+}
+
+.footer-column ul li a {
+  color: #bdc3c7;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.footer-column ul li a:hover {
+  color: #44c296;
+}
+
+.footer-newsletter {
+  padding: 3rem 0;
+  border-bottom: 1px linear-gradient(135deg, #0c2019 0%, #358954 100%);
+}
+
+.newsletter-content {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.newsletter-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.newsletter-content p {
+  color: #bdc3c7;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.newsletter-form input {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: white;
+  font-size: 0.95rem;
+}
+
+.newsletter-form input::placeholder {
+  color: #bdc3c7;
+}
+
+.newsletter-form button {
+  padding: 0.8rem 1.5rem;
+  background: #44c296;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.newsletter-form button:hover {
+  background: #358954;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 0;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-bottom-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.footer-bottom-left p {
+  margin: 0;
+  color: #bdc3c7;
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: #bdc3c7;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #44c296;
+}
+
+.footer-bottom-right p {
+  margin: 0;
+  color: #bdc3c7;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  
+  .newsletter-form {
+    flex-direction: column;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .footer-bottom-left {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-links">
+     <h1><span style="color: black;">tesT</span><span style="color: green;">Bird</span></h1>
+
+    </div>
+    <div class="auth-buttons">
+     
+      <button class="signIn" onclick="window.location.href='signIn.html'">Sign In</button>
+      <button class="signup" onclick="window.location.href='signUp.html'">Sign Up for Free</button>
+     
+    </div>
+  </header>
+  <main>
+    <div class="main-content">
+      <h1>Your API Testing Platform, From Design to Delivery</h1>
+      <h5>
+        Testbird is the single platform for designing, building, and scaling APIs—together.
+      </h5>
+      <div class="email-signup">
+        <br>
+        <br>
+        <input type="email" id="emailInput"  placeholder="name@company.com" />
+        <button onclick="handleEmailSignup()">Sign Up for Free</button>
+      </div>
+      
+    </div>
+    <div class="illustration">
+      <img src="https://static.vecteezy.com/system/resources/previews/008/328/554/original/api-icon-style-free-vector.jpg" alt="API Illustration">
+    </div>
+  </main>
+  <div class="div1">
+  <div class="container">
+    <div class="content-wrapper">
+      <h1>Build APIs Together</h1>
+      <p>Collaborate seamlessly across your entire API development lifecycle with powerful tools designed for teams.</p>
+      <div class="features">
+        <div class="feature-item">
+          <h3>Design First</h3>
+          <p>Create API specifications before writing code</p>
+        </div>
+        <div class="feature-item">
+          <h3>Test Everything</h3>
+          <p>Comprehensive testing tools for all scenarios</p>
+        </div>
+        <div class="feature-item">
+          <h3>Deploy Faster</h3>
+          <p>Streamlined deployment and monitoring</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="video-section">
+  <div class="video-container">
+    <h2>See TestBird in Action</h2>
+    <p>Watch how TestBird drastically speeds up API development by reducing collaboration friction</p>
+    <div class="video-wrapper">
+      <iframe 
+        src="https://voyager.postman.com/video/grow-with-postman/drastically-speed-up-api-development-by-reducing-collaboration-friction-video.mp4"
+        frameborder="0"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</div>
+<footer class="main-footer">
+  <div class="footer-container">
+    <!-- Top Section -->
+    <div class="footer-top">
+      <div class="footer-brand">
+        <h2><span style="color: white;">tesT</span><span style="color:green;">Bird</span></h2>
+        <p>Your comprehensive API testing platform, from design to delivery. Build, test, and scale APIs with confidence.</p>
+        <div class="social-links">
+          <a href="#"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+          <a href="#"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+          <a href="#"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.083.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.162-1.499-.69-2.436-2.888-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.357-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24c6.624 0 11.99-5.367 11.99-12C24.007 5.367 18.641.001.012.001z"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+   
+   
+
+    <!-- Bottom Section -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-left">
+        <p>&copy; 2025 TestBird. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+          <a href="#">GDPR</a>
+        </div>
+      </div>
+      <div class="footer-bottom-right">
+        <p>Made with ❤️ for developers worldwide</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+
+  <script>
+        function handleEmailSignup() {
+            const email = document.getElementById('emailInput').value.trim();
+            
+            if (email) {
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('Please enter a valid email address');
+                    return;
+                }
+                
+                // Redirect to signup page with email as URL parameter
+                window.location.href = `signUp.html?email=${encodeURIComponent(email)}`;
+            } else {
+                // If no email provided, just go to signup page
+                window.location.href = 'signUp.html';
+            }
+        }
+
+        // Allow Enter key to trigger signup
+        document.getElementById('emailInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleEmailSignup();
+            }
+        });
+    </script>
+
+</body>
+</html> 

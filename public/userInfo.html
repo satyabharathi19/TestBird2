@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complete Your Profile - TestBird</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #0c2019 0%, #358954 100%);
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: white;
+            padding: 0rem;
+            width: 100%;
+        }
+
+        .nav-links {
+            margin-left: 25px;
+        }
+
+        main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 500px;
+            text-align: center;
+        }
+
+        .question {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .question.active {
+            display: block;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .option-card {
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #f9f9f9;
+        }
+
+        .option-card:hover {
+            border-color: green;
+            background-color: #f0f8f0;
+        }
+
+        .option-card.selected {
+            border-color: green;
+            background-color: #e8f5e8;
+            font-weight: 600;
+        }
+
+        .next-btn {
+            padding: 12px 30px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .next-btn:hover {
+            background-color: darkgreen;
+        }
+
+        .next-btn.show {
+            display: inline-block;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-links">
+            <h1><span style="color: black;">tesT</span><span style="color: green;">Bird</span></h1>
+        </div>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <!-- Question 1: User Role -->
+            <div class="question active" id="question1">
+                <h2>What's your role?</h2>
+                <p>Help us personalize your TestBird experience</p>
+                <div class="options-grid">
+                    <div class="option-card" data-value="student">Student</div>
+                    <div class="option-card" data-value="fullstack">Full Stack Developer</div>
+                    <div class="option-card" data-value="frontend">Frontend Developer</div>
+                    <div class="option-card" data-value="backend">Backend Developer</div>
+                    <div class="option-card" data-value="qa">QA Tester</div>
+                    <div class="option-card" data-value="manager">Project Manager</div>
+                </div>
+                <button class="next-btn" id="nextBtn1">Next</button>
+            </div>
+
+            <!-- Question 2: Purpose -->
+            <div class="question" id="question2">
+                <h2>What's your purpose for using TestBird?</h2>
+                <p>This helps us recommend the best features for you</p>
+                <div class="options-grid">
+                    <div class="option-card" data-value="personal">Personal Use</div>
+                    <div class="option-card" data-value="team">Team Work</div>
+                    <div class="option-card" data-value="learning">Learning & Practice</div>
+                    <div class="option-card" data-value="client">Client Projects</div>
+                </div>
+                <button class="next-btn" id="nextBtn2">Complete Setup</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let selectedRole = '';
+        let selectedPurpose = '';
+        let currentQuestion = 1;
+
+        // Handle option selection
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('option-card')) {
+                const questionDiv = e.target.closest('.question');
+                const options = questionDiv.querySelectorAll('.option-card');
+                
+                // Remove selected class from all options in current question
+                options.forEach(option => option.classList.remove('selected'));
+                
+                // Add selected class to clicked option
+                e.target.classList.add('selected');
+                
+                // Store selected value
+                const value = e.target.dataset.value;
+                if (currentQuestion === 1) {
+                    selectedRole = value;
+                    document.getElementById('nextBtn1').classList.add('show');
+                } else if (currentQuestion === 2) {
+                    selectedPurpose = value;
+                    document.getElementById('nextBtn2').classList.add('show');
+                }
+            }
+        });
+
+        // Handle next button clicks
+        document.getElementById('nextBtn1').addEventListener('click', function() {
+            if (selectedRole) {
+                document.getElementById('question1').classList.remove('active');
+                document.getElementById('question2').classList.add('active');
+                currentQuestion = 2;
+            }
+        });
+
+        document.getElementById('nextBtn2').addEventListener('click', function() {
+            if (selectedPurpose) {
+                // Get email from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const userid = urlParams.get('userid');
+                
+                // Save user preferences (you can send this to your backend)
+                const userPreferences = {
+                    userid: userid,
+                    role: selectedRole,
+                    purpose: selectedPurpose
+                };
+                
+                console.log('User preferences:', userPreferences);
+                
+                // Redirect to home page
+                window.location.href = `home.html?userid=${userid}&setupComplete=true`;
+            }
+        });
+    </script>
+</body>
+</html>

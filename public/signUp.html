@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Postman UI Clone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: linear-gradient(135deg, #0c2019 0%, #358954 100%);
+    }
+    
+    header {
+      background-color: white;
+      padding: 0rem ;
+      width :100%;
+      
+     
+    }
+
+    .nav-links {
+    margin-left: 25px; /* Adjust this value as needed */
+}
+
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 80vh; /* Centers form vertically */
+      width: 100%;
+    }
+
+    form {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 350px;
+      
+      border-top-color: green;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    button {
+      padding: 10px;
+      font-size: 16px;
+      background-color: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: darkgreen;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-links">
+      <h1><span style="color: black;">tesT</span><span style="color: green;">Bird</span></h1>
+    </div>
+    
+  </header>
+
+  <main>
+    <form id="signupForm">
+        <h2>Create Testbird Account</h2>
+        
+        <label for="email" >Enter Email Address</label>
+      <input type="email" id="email" placeholder="company@gmail.com" required>
+      
+       <label  for="username" >UserName</label>
+      <input type="text" id="username" placeholder="Full Name" required>
+      
+      <label for="password" >Password</label>
+      <input type="password" id="password" placeholder="Password" required>
+      <br>
+      <button id="create" >Create Free Account</button>
+    </form>
+  </main>
+  <script>
+     const BASE_URL = "http://localhost:3000";
+     function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Pre-populate email if it exists in URL parameters
+        window.addEventListener('DOMContentLoaded', function() {
+            const email = getUrlParameter('email');
+            if (email) {
+                document.getElementById('email').value = decodeURIComponent(email);
+            }
+        });
+
+    document.getElementById("signupForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevents page refresh
+    createUser(); // Calls the function
+});
+
+function createUser() {
+    const userData = {
+        username: document.getElementById("username").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+    };
+
+    fetch(`${BASE_URL}/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData)
+    })
+    .then(response => response.json())
+    .then(data => {
+    document.body.innerHTML += `<p style="color:white;font-weight:bold">${data.message}</p>`;
+    console.log("Success:", data);
+    
+    // Redirect to userInfo.html after successful signup
+    if (data.message === "User registered successfully!" || data.success) {
+        setTimeout(() => {
+            window.location.href = `userInfo.html?userid=${data.userid}`;
+        }, 1500); // Wait 1.5 seconds to show success message
+    }
+})
+    .catch(error => {
+        document.body.innerHTML += `<p style="color:red;">Error signing up!</p>`;
+        console.error("Error:", error);
+    });
+}
+  </script>
+
+</body>
+
+</html>

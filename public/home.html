@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Postman Home Clone</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/jsoneditor@9.10.0/dist/jsoneditor.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/jsoneditor@9.10.0/dist/jsoneditor.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="navbar">
+      <h1>
+        <span style="color: black">tesT</span
+        ><span style="color: green">Bird</span>
+      </h1>
+    </div>
+
+    <div class="workspace">
+      <div class="sidebar">
+        <h2 style="margin-top: 60px">Collections</h2>
+        <hr />
+        <br />
+        <button onclick="showcollection()">+ New Collection</button>
+        <div id="collectionDiv">
+          <input
+            type="text"
+            id="collectionInput"
+            placeholder="Collection Name"
+          />
+          <button onclick="createCollection()">Create</button>
+        </div>
+        <div id="collectionsContainer"></div>
+        <div id="requestsTitle" style="display: none; margin-top: 20px">
+          <h3>Requests</h3>
+        </div>
+        <div id="requestsList"></div>
+      </div>
+
+      <div class="main">
+        <div class="request-bar">
+          <select id="methodSelect">
+            <option
+              style="color: #28a745; font-size: medium; font-weight: bold"
+            >
+              GET
+            </option>
+            <option
+              style="color: #007bff; font-size: medium; font-weight: bold"
+            >
+              POST
+            </option>
+            <option
+              style="color: #ffc107; font-size: medium; font-weight: bold"
+            >
+              PUT
+            </option>
+            <option
+              style="color: #dc3545; font-size: medium; font-weight: bold"
+            >
+              DELETE
+            </option>
+          </select>
+          <input id="urlid" type="text" placeholder="https://example.com/api" />
+          <button id="sendBtn" onclick="fetchdata()">
+            <span id="sendText">Send</span>
+            <span id="loadingIcon" style="display: none">
+              <i class="fas fa-spinner fa-spin"></i> Loading...
+            </span>
+          </button>
+          <button id="saveBtn" onclick="showSaveForm()">Save</button>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-target="params">Params</button>
+          <button class="tab-btn" data-target="headers">Headers</button>
+          <button class="tab-btn" data-target="body">Body</button>
+          <button class="tab-btn" data-target="auth">Auth</button>
+        </div>
+
+        <div class="tab-content" id="params">
+          <div id="paramsContainer" class="kv-container"></div>
+          <button
+            onclick="addEntry('paramsContainer')"
+            style="
+              padding: 6px 15px;
+              background-color: green;
+              color: white;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+            "
+          >
+            + Add Param
+          </button>
+        </div>
+
+        <div class="tab-content" id="headers" style="display: none">
+          <div id="headersContainer" class="kv-container"></div>
+          <button
+            onclick="addEntry('headersContainer')"
+            style="
+              padding: 6px 15px;
+              background-color: green;
+              color: white;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+            "
+          >
+            + Add Header
+          </button>
+        </div>
+
+        <div class="tab-content" id="body" style="display: none">
+          <div class="body-type-selector">
+            <label
+              ><input
+                type="radio"
+                name="bodyType"
+                value="none"
+                checked
+                onchange="switchBodyType(this.value)"
+              />
+              none</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="bodyType"
+                value="form-data"
+                onchange="switchBodyType(this.value)"
+              />
+              form-data</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="bodyType"
+                value="x-www-form-urlencoded"
+                onchange="switchBodyType(this.value)"
+              />
+              x-www-form-urlencoded</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="bodyType"
+                value="raw"
+                onchange="switchBodyType(this.value)"
+              />
+              raw</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="bodyType"
+                value="binary"
+                onchange="switchBodyType(this.value)"
+              />
+              binary</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="bodyType"
+                value="graphql"
+                onchange="switchBodyType(this.value)"
+              />
+              GraphQL</label
+            >
+          </div>
+
+          <div id="bodyContent">
+            <div id="noneBody" class="body-section" style="display: block">
+              <p style="color: #666; font-style: italic">
+                This request does not have a body
+              </p>
+            </div>
+
+            <div id="formDataBody" class="body-section" style="display: none">
+              <div id="formDataContainer" class="kv-container"></div>
+              <button onclick="addFormDataEntry()" class="add-btn">
+                + Add Row
+              </button>
+            </div>
+
+            <div id="urlencodedBody" class="body-section" style="display: none">
+              <div id="urlencodedContainer" class="kv-container"></div>
+              <button onclick="addUrlencodedEntry()" class="add-btn">
+                + Add Row
+              </button>
+            </div>
+
+            <div id="rawBody" class="body-section" style="display: none">
+              <select id="rawType" style="margin-bottom: 10px">
+                <option value="json">JSON</option>
+                <option value="text">Text</option>
+                <option value="javascript">JavaScript</option>
+                <option value="html">HTML</option>
+                <option value="xml">XML</option>
+              </select>
+              <div id="jsoneditor" style="height: 300px"></div>
+            </div>
+
+            <div id="binaryBody" class="body-section" style="display: none">
+              <input type="file" id="binaryFile" accept="*/*" />
+              <p style="color: #666; font-size: 14px; margin-top: 10px">
+                Select a file to send as binary data
+              </p>
+            </div>
+
+            <div id="graphqlBody" class="body-section" style="display: none">
+              <div style="margin-bottom: 10px">
+                <label>Query:</label>
+                <textarea
+                  id="graphqlQuery"
+                  rows="8"
+                  style="width: 100%; padding: 8px; font-family: monospace"
+                ></textarea>
+              </div>
+              <div>
+                <label>Variables:</label>
+                <textarea
+                  id="graphqlVariables"
+                  rows="4"
+                  style="width: 100%; padding: 8px; font-family: monospace"
+                  placeholder='{"variable": "value"}'
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ADD THIS ENTIRE SECTION after the body tab-content div -->
+        <div class="tab-content" id="auth" style="display: none">
+          <div class="auth-type-selector">
+            <label
+              ><input
+                type="radio"
+                name="authType"
+                value="none"
+                checked
+                onchange="switchAuthType(this.value)"
+              />
+              No Auth</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="authType"
+                value="bearer"
+                onchange="switchAuthType(this.value)"
+              />
+              Bearer Token</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="authType"
+                value="basic"
+                onchange="switchAuthType(this.value)"
+              />
+              Basic Auth</label
+            >
+            <label
+              ><input
+                type="radio"
+                name="authType"
+                value="api-key"
+                onchange="switchAuthType(this.value)"
+              />
+              API Key</label
+            >
+          </div>
+
+          <div id="authContent">
+            <div id="noAuth" class="auth-section" style="display: block">
+              <p style="color: #666; font-style: italic">
+                This request does not use any authorization
+              </p>
+            </div>
+
+            <div id="bearerAuth" class="auth-section" style="display: none">
+              <label>Token:</label>
+              <input
+                type="text"
+                id="bearerToken"
+                placeholder="Enter your bearer token"
+                style="
+                  width: 100%;
+                  padding: 8px;
+                  margin-top: 5px;
+                  border: 1px solid #ccc;
+                  border-radius: 4px;
+                "
+              />
+            </div>
+
+            <div id="basicAuth" class="auth-section" style="display: none">
+              <div style="display: flex; gap: 10px">
+                <div style="flex: 1">
+                  <label>Username:</label>
+                  <input
+                    type="text"
+                    id="basicUsername"
+                    placeholder="Username"
+                    style="
+                      width: 100%;
+                      padding: 8px;
+                      margin-top: 5px;
+                      border: 1px solid #ccc;
+                      border-radius: 4px;
+                    "
+                  />
+                </div>
+                <div style="flex: 1">
+                  <label>Password:</label>
+                  <input
+                    type="password"
+                    id="basicPassword"
+                    placeholder="Password"
+                    style="
+                      width: 100%;
+                      padding: 8px;
+                      margin-top: 5px;
+                      border: 1px solid #ccc;
+                      border-radius: 4px;
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div id="apiKeyAuth" class="auth-section" style="display: none">
+              <div style="margin-bottom: 10px">
+                <label>Key:</label>
+                <input
+                  type="text"
+                  id="apiKeyName"
+                  placeholder="e.g., X-API-Key"
+                  style="
+                    width: 100%;
+                    padding: 8px;
+                    margin-top: 5px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                  "
+                />
+              </div>
+              <div style="margin-bottom: 10px">
+                <label>Value:</label>
+                <input
+                  type="text"
+                  id="apiKeyValue"
+                  placeholder="Enter your API key"
+                  style="
+                    width: 100%;
+                    padding: 8px;
+                    margin-top: 5px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                  "
+                />
+              </div>
+              <div>
+                <label>Add to:</label>
+                <select
+                  id="apiKeyLocation"
+                  style="
+                    width: 100%;
+                    padding: 8px;
+                    margin-top: 5px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                  "
+                >
+                  <option value="header">Header</option>
+                  <option value="query">Query Params</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="response">
+          <div class="toolbar">
+            <button onclick="showJsonFormat()">JSON</button>
+            <button onclick="showTableFormat()">Preview</button>
+          </div>
+          <div id="responseInfo" class="response-info" style="display: none">
+            <span>Status: <span id="responseStatus">-</span></span>
+            <span>Time: <span id="responseTime">-</span></span>
+            <span>Size: <span id="responseSize">-</span></span>
+          </div>
+          <div
+            id="responseLoading"
+            class="response-loading"
+            style="display: none"
+          >
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Loading response...</span>
+          </div>
+          <div id="output" class="output"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Request Form -->
+    <div id="formContainer">
+      <h3>Save Request</h3>
+      <br />
+      <input
+        type="text"
+        id="inputField"
+        style="
+          flex: 1;
+          padding: 0.75rem;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          margin-bottom: 40px;
+        "
+        placeholder="Request Name"
+      />
+      <br />
+      <div id="dbContent"></div>
+      <br />
+      <button
+        onclick="saveRequest()"
+        style="
+          padding: 6px 15px;
+          background-color: green;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-right: 4px;
+        "
+      >
+        Save
+      </button>
+      <button
+        onclick="closeSaveForm()"
+        style="
+          padding: 6px 15px;
+          background-color: green;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        "
+      >
+        Cancel
+      </button>
+    </div>
+
+    <script>
+      // Check URL parameters once
+       const BASE_URL = "http://localhost:3000";
+      const urlParams = new URLSearchParams(window.location.search);
+
+      // Check if user just completed setup
+      if (urlParams.get("setupComplete") === "true") {
+        showWelcomeNotification();
+
+        // Clean URL
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.delete("setupComplete");
+        window.history.replaceState({}, "", newUrl);
+      }
+
+      // Check if user just logged in successfully
+      if (urlParams.get("loginSuccess") === "true") {
+        showSuccessNotification();
+
+        // Clean URL by removing the loginSuccess parameter
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.delete("loginSuccess");
+        window.history.replaceState({}, "", newUrl);
+      }
+
+      function showSuccessNotification() {
+        // Create notification element directly
+        const notification = document.createElement("div");
+        notification.style.cssText = `
+        position: fixed; 
+        top: 20px; 
+        right: 20px; 
+        background: green; 
+        color: white; 
+        padding: 25px 40px; 
+        border-radius: 5px; 
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2); 
+        z-index: 1000; 
+        display: flex; 
+        align-items: center; 
+        gap: 10px;
+    `;
+
+        // Add content with spinner
+        notification.innerHTML = `
+        <div class="login-spinner" style="
+            width: 16px; 
+            height: 16px; 
+            border: 2px solid #fff; 
+            border-top: 2px solid transparent; 
+            border-radius: 50%; 
+            animation: loginSpin 1s linear infinite;
+        "></div>
+        Successfully logged in!
+    `;
+
+        // Add CSS animation if it doesn't exist
+        if (!document.getElementById("login-spinner-styles")) {
+          const style = document.createElement("style");
+          style.id = "login-spinner-styles";
+          style.textContent = `
+            @keyframes loginSpin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+          document.head.appendChild(style);
+        }
+
+        // Add to body
+        document.body.appendChild(notification);
+
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+          if (notification && notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 3000);
+      }
+
+      function showWelcomeNotification() {
+        // Create notification element directly
+        const notification = document.createElement("div");
+        notification.style.cssText = `
+        position: fixed; 
+        top: 20px; 
+        right: 20px; 
+        background: #4CAF50; 
+        color: white; 
+        padding: 15px 20px; 
+        border-radius: 5px; 
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2); 
+        z-index: 1000;
+    `;
+        notification.textContent =
+          "Welcome to TestBird! Your account is ready.";
+
+        // Add to body
+        document.body.appendChild(notification);
+
+        // Remove notification after 4 seconds
+        setTimeout(() => {
+          if (notification && notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 4000);
+      }
+      let editor = null;
+      let responseData = null;
+      let selectedCollection = null;
+      let userId = null;
+
+      // Initialize the application
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeApp();
+      });
+
+      function addEntry(containerId) {
+        const container = document.getElementById(containerId);
+        const row = document.createElement("div");
+        row.className = "kv-row";
+        row.innerHTML = `
+        <input placeholder="Key" />
+        <input placeholder="Value" />
+        <button onclick="this.parentNode.remove()">remove</button>
+      `;
+        container.appendChild(row);
+      }
+
+      function getEntries(containerId) {
+        return [
+          ...document.getElementById(containerId).querySelectorAll(".kv-row"),
+        ]
+          .map((row) => {
+            const key = row.children[0].value.trim();
+            const val = row.children[1].value.trim();
+            return key ? [key, val] : null;
+          })
+          .filter(Boolean);
+      }
+
+      function initializeApp() {
+        // Get user ID from URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        userId = urlParams.get("userid");
+
+        if (!userId) {
+          alert("User ID is required in URL parameters (?userid=your_user_id)");
+          return;
+        }
+
+        // Initialize JSONEditor
+        const container = document.getElementById("jsoneditor");
+        const options = {
+          mode: "code",
+          modes: ["code", "tree", "view"],
+        };
+        editor = new JSONEditor(container, options);
+        editor.set({});
+
+        // Load collections
+        loadCollections();
+        setupTabs();
+      }
+
+      function setupTabs() {
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            document
+              .querySelectorAll(".tab-btn")
+              .forEach((b) => b.classList.remove("active"));
+            document
+              .querySelectorAll(".tab-content")
+              .forEach((c) => (c.style.display = "none"));
+            btn.classList.add("active");
+            document.getElementById(btn.dataset.target).style.display = "block";
+          });
+        });
+      }
+
+      function showcollection() {
+        const div = document.getElementById("collectionDiv");
+        div.style.display = div.style.display === "none" ? "block" : "none";
+      }
+
+      function createCollection() {
+        const inputValue = document
+          .getElementById("collectionInput")
+          .value.trim();
+
+        if (!inputValue) {
+          alert("Please enter a collection name");
+          return;
+        }
+
+        const userData = {
+          collectionName: inputValue,
+          userid: userId,
+        };
+
+        fetch(`${BASE_URL}/collection`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+            document.getElementById("collectionInput").value = "";
+            document.getElementById("collectionDiv").style.display = "none";
+            loadCollections(); // Reload collections
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Error creating collection");
+          });
+      }
+
+      function loadCollections() {
+        if (!userId) return;
+
+        fetch(`${BASE_URL}/collection?userid=${userId}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const container = document.getElementById("collectionsContainer");
+            container.innerHTML = "";
+
+            if (data.collections && data.collections.length > 0) {
+              data.collections.forEach((collection) => {
+                const collectionItem = document.createElement("div");
+                collectionItem.className = "collection-item";
+                collectionItem.innerHTML = `
+  <span class="collection-name">${collection.collectionName}</span>
+  <span style="margin-left: 30px; cursor: pointer;"
+        onclick="deleteCollection(${collection.collectionid})"
+        title="Delete collection">
+    <i class="fas fa-trash-alt"></i>
+  </span>
+`;
+                collectionItem.onclick = function () {
+                  selectCollection(collection, collectionItem);
+                };
+                container.appendChild(collectionItem);
+              });
+            } else {
+              container.innerHTML =
+                '<p style="color: #666;">No collections found</p>';
+            }
+          })
+          .catch((error) => {
+            console.error("Error loading collections:", error);
+          });
+      }
+
+      function selectCollection(collection, element) {
+        // Remove previous selection
+        document.querySelectorAll(".collection-item").forEach((item) => {
+          item.classList.remove("selected");
+        });
+
+        // Add selection to clicked item
+        element.classList.add("selected");
+        selectedCollection = collection;
+
+        // Load requests for this collection
+        loadRequests(collection.collectionName);
+      }
+
+      function loadRequests(collectionName) {
+        if (!userId || !collectionName) return;
+
+        fetch(
+          `${BASE_URL}/requests?userId=${userId}&collectionName=${encodeURIComponent(collectionName)}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            const requestsList = document.getElementById("requestsList");
+            const requestsTitle = document.getElementById("requestsTitle");
+
+            if (data.requests && data.requests.length > 0) {
+              requestsTitle.style.display = "block";
+              requestsList.innerHTML = "";
+
+              data.requests.forEach((request) => {
+                const requestItem = document.createElement("div");
+                requestItem.className = "request-item";
+                requestItem.innerHTML = `
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span style="font-weight: bold; color: ${getMethodColor(
+                    request.method
+                  )}">${request.method}</span>
+                  <span 
+                    style="margin-left: 8px; cursor: pointer; text-decoration: underline;" 
+                    onclick="loadRequest(${request.id})"
+                    title="Click to load request"
+                  >
+                    ${request.requestName}
+                  </span>
+                  <span style="margin-left: 30px; cursor: pointer" 
+                    onclick="deleteRequest(${request.id})" 
+                    title="Delete request">
+                    <i class="fas fa-trash-alt"></i>
+                  </span>
+                </div>
+              </div>
+            `;
+                requestsList.appendChild(requestItem);
+              });
+            } else {
+              requestsTitle.style.display = "none";
+              requestsList.innerHTML =
+                '<p style="color: #666; font-size: 14px;">No requests found</p>';
+            }
+          })
+          .catch((error) => {
+            console.error("Error loading requests:", error);
+            document.getElementById("requestsList").innerHTML =
+              '<p style="color: #dc3545; font-size: 14px;">Error loading requests</p>';
+          });
+      }
+
+      function getMethodColor(method) {
+        const colors = {
+          GET: "#28a745",
+          POST: "#007bff",
+          PUT: "#ffc107",
+          DELETE: "#dc3545",
+        };
+        return colors[method] || "#6c757d";
+      }
+
+      function loadRequest(requestId) {
+        fetch( `${BASE_URL}/requests/${requestId}?userId=${userId}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.request) {
+              const request = data.request;
+
+              // Load the request data into the form
+              document.getElementById("methodSelect").value = request.method;
+              document.getElementById("urlid").value = request.url;
+
+              // Load body if exists
+              if (request.body) {
+                editor.set(request.body);
+              } else {
+                editor.set({});
+              }
+
+              // Show success message
+              showMessage(
+                `Request "${request.requestName}" loaded successfully`,
+                "success"
+              );
+            }
+          })
+          .catch((error) => {
+            console.error("Error loading request:", error);
+            showMessage("Error loading request", "error");
+          });
+      }
+
+      function deleteRequest(requestId) {
+        if (!confirm("Are you sure you want to delete this request?")) {
+          return;
+        }
+
+        fetch(`${BASE_URL}/requests/${requestId}?userId=${userId}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            showMessage("Request deleted successfully", "success");
+            // Reload requests for the current collection
+            if (selectedCollection) {
+              loadRequests(selectedCollection.collectionName);
+            }
+          })
+          .catch((error) => {
+            console.error("Error deleting request:", error);
+            showMessage("Error deleting request", "error");
+          });
+      }
+      function deleteCollection(collectionId) {
+        if (!confirm("Are you sure you want to delete this collection?")) {
+          return;
+        }
+
+        fetch(
+          `${BASE_URL}/collections/${collectionId}?userId=${userId}`,
+          {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            showMessage("Collection deleted successfully", "success");
+            // Reload collections
+            loadCollections();
+          })
+          .catch((error) => {
+            console.error("Error deleting collection:", error);
+            showMessage("Error deleting collection", "error");
+          });
+      }
+
+      function showMessage(message, type) {
+        // Create message element
+        const messageDiv = document.createElement("div");
+        messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 4px;
+        color: white;
+        font-weight: bold;
+        z-index: 10000;
+        background: ${type === "success" ? "#28a745" : "#dc3545"};
+      `;
+        messageDiv.textContent = message;
+
+        document.body.appendChild(messageDiv);
+
+        // Remove message after 3 seconds
+        setTimeout(() => {
+          document.body.removeChild(messageDiv);
+        }, 3000);
+      }
+
+      function showSaveForm() {
+        if (!selectedCollection) {
+          alert("Please select a collection first");
+          return;
+        }
+
+        // Show available collections in the save form
+        const dbContent = document.getElementById("dbContent");
+        dbContent.innerHTML = `<div class="collection-item selected">${selectedCollection.collectionName}</div>`;
+
+        document.getElementById("formContainer").style.display = "block";
+      }
+
+      function closeSaveForm() {
+        document.getElementById("formContainer").style.display = "none";
+        document.getElementById("inputField").value = "";
+      }
+
+      function saveRequest() {
+        const reqName = document.getElementById("inputField").value.trim();
+
+        if (!reqName) {
+          alert("Please enter a request name");
+          return;
+        }
+
+        if (!selectedCollection) {
+          alert("Please select a collection");
+          return;
+        }
+
+        const reqMethod = document.getElementById("methodSelect").value;
+        const reqUrl = document.getElementById("urlid").value;
+        const reqBody = editor.get();
+
+        const reqData = {
+          userId: userId,
+          requestName: reqName,
+          method: reqMethod,
+          url: reqUrl,
+          body: reqBody,
+          collectionName: selectedCollection.collectionName,
+        };
+
+        fetch(`${BASE_URL}/requests`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(reqData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+            closeSaveForm();
+            loadRequests(selectedCollection.collectionName); // Reload requests
+            showMessage("Request saved successfully", "success");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Error saving request");
+          });
+      }
+
+      function showJsonFormat() {
+        if (!responseData) {
+          document.getElementById("output").innerHTML =
+            "No response data available";
+          return;
+        }
+
+        // Clear the output div and create a new JSON editor container
+        const outputDiv = document.getElementById("output");
+        outputDiv.innerHTML =
+          '<div id="responseJsonEditor" style="height: 380px;"></div>';
+
+        // Create a new JSON editor instance for the response
+        const responseContainer = document.getElementById("responseJsonEditor");
+        const responseOptions = {
+          mode: "code", // or "code" if you want it editable
+          modes: ["view", "code", "tree"],
+        };
+
+        const responseEditor = new JSONEditor(
+          responseContainer,
+          responseOptions
+        );
+        responseEditor.set(responseData);
+      }
+      if (window.responseEditor) {
+        window.responseEditor.destroy();
+      }
+      window.responseEditor = new JSONEditor(
+        responseContainer,
+        responseOptions
+      );
+
+      function showTableFormat() {
+        if (!responseData) {
+          document.getElementById("output").innerHTML =
+            "No response data available";
+          return;
+        }
+
+        if (Array.isArray(responseData) && responseData.length > 0) {
+          const keys = Object.keys(responseData[0]);
+          let table = `<table border="1" style="width: 100%; border-collapse: collapse;">`;
+          table += `<tr>${keys
+            .map(
+              (key) =>
+                `<th style="padding: 8px; background: #f1f1f1;">${key}</th>`
+            )
+            .join("")}</tr>`;
+
+          responseData.forEach((item) => {
+            table += `<tr>${keys
+              .map((key) => `<td style="padding: 8px;">${item[key] || ""}</td>`)
+              .join("")}</tr>`;
+          });
+
+          table += `</table>`;
+          document.getElementById("output").innerHTML = table;
+        } else {
+          document.getElementById("output").innerHTML =
+            "Data is not in table format";
+        }
+      }
+
+      function fetchdata() {
+        const baseUrl = document.getElementById("urlid").value.trim();
+        const method = document.getElementById("methodSelect").value;
+
+        if (!baseUrl) {
+          alert("Please enter a URL");
+          return;
+        }
+        // Show loading state
+        document.getElementById("sendText").style.display = "none";
+        document.getElementById("loadingIcon").style.display = "inline-flex";
+        document.getElementById("sendBtn").disabled = true;
+        // Show response loading
+        document.getElementById("responseLoading").style.display = "flex";
+        document.getElementById("output").style.display = "none";
+        document.getElementById("responseInfo").style.display = "none";
+        // Add Query Params
+        // Add Query Params + Auth Params
+        const params = getEntries("paramsContainer");
+        const authParams = getAuthParams();
+        let url = new URL(baseUrl);
+        [...params, ...authParams].forEach(([key, value]) =>
+          url.searchParams.append(key, value)
+        );
+
+        // Collect Headers + Auth Headers
+        const headers = getEntries("headersContainer");
+        const authHeaders = getAuthHeaders();
+        const allHeaders = [...headers, ...authHeaders];
+        // Instead of always using getBodyData(), handle FormData separately
+        let body = null;
+        const bodyType = document.querySelector(
+          'input[name="bodyType"]:checked'
+        ).value;
+
+        if (method === "POST" || method === "PUT") {
+          body = getBodyData();
+        }
+        // Record start time
+        const startTime = Date.now();
+
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url.toString(), true);
+
+        // Apply Headers (including auth headers)
+allHeaders.forEach(([key, value]) => {
+  xhr.setRequestHeader(key, value);
+});
+
+        // Only set Content-Type for non-FormData requests
+if ((method === 'POST' || method === 'PUT') && 
+    document.querySelector('input[name="bodyType"]:checked').value !== 'form-data' &&
+    !allHeaders.some(([k]) => k.toLowerCase() === 'content-type')) {
+  const contentType = getContentType();
+  if (contentType) {
+    xhr.setRequestHeader('Content-Type', contentType);
+  }
+}
+
+        xhr.onload = function () {
+          // Calculate response time
+          const endTime = Date.now();
+          const responseTime = endTime - startTime;
+
+          // Get response size
+          const responseSize = new Blob([xhr.responseText]).size;
+
+          // Update response info
+          document.getElementById(
+            "responseStatus"
+          ).textContent = `${xhr.status} ${xhr.statusText}`;
+          document.getElementById(
+            "responseTime"
+          ).textContent = `${responseTime}ms`;
+          document.getElementById("responseSize").textContent =
+            formatBytes(responseSize);
+          document.getElementById("responseInfo").style.display = "flex";
+
+          try {
+            responseData = JSON.parse(xhr.responseText);
+          } catch (e) {
+            responseData = { response: xhr.responseText };
+          }
+          // Hide loading state
+          document.getElementById("sendText").style.display = "inline";
+          document.getElementById("loadingIcon").style.display = "none";
+          document.getElementById("sendBtn").disabled = false;
+          // Hide response loading
+          document.getElementById("responseLoading").style.display = "none";
+          document.getElementById("output").style.display = "block";
+          showJsonFormat();
+        };
+
+        xhr.onerror = function () {
+          // Calculate response time even for errors
+          const endTime = Date.now();
+          const responseTime = endTime - startTime;
+
+          // Update response info for error
+          document.getElementById(
+            "responseStatus"
+          ).textContent = `${xhr.status} Error`;
+          document.getElementById(
+            "responseTime"
+          ).textContent = `${responseTime}ms`;
+          document.getElementById("responseSize").textContent = "0 B";
+          document.getElementById("responseInfo").style.display = "flex";
+
+          responseData = { error: "Network error", status: xhr.status };
+          // Hide loading state
+          document.getElementById("sendText").style.display = "inline";
+          document.getElementById("loadingIcon").style.display = "none";
+          document.getElementById("sendBtn").disabled = false;
+          // Hide response loading
+          document.getElementById("responseLoading").style.display = "none";
+          document.getElementById("output").style.display = "block";
+          showJsonFormat();
+        };
+
+        xhr.send(body);
+      }
+      function formatBytes(bytes) {
+        if (bytes === 0) return "0 B";
+        const k = 1024;
+        const sizes = ["B", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+      }
+      function switchBodyType(type) {
+        // Hide all body sections
+        document.querySelectorAll(".body-section").forEach((section) => {
+          section.style.display = "none";
+        });
+
+        // Map the radio button values to actual element IDs
+        const bodyTypeMap = {
+          none: "noneBody",
+          "form-data": "formDataBody",
+          "x-www-form-urlencoded": "urlencodedBody",
+          raw: "rawBody",
+          binary: "binaryBody",
+          graphql: "graphqlBody",
+        };
+
+        // Show selected body type
+        const elementId = bodyTypeMap[type];
+        if (elementId) {
+          document.getElementById(elementId).style.display = "block";
+        }
+
+        // Initialize JSONEditor for raw type
+        if (type === "raw" && !editor) {
+          initializeJSONEditor();
+        }
+      }
+
+      function addFormDataEntry() {
+        const container = document.getElementById("formDataContainer");
+        const row = document.createElement("div");
+        row.className = "form-data-row";
+        row.innerHTML = `
+    <input placeholder="Key" />
+    <select>
+      <option value="text">Text</option>
+      <option value="file">File</option>
+    </select>
+    <input placeholder="Value" />
+    <input type="file" style="display:none;" />
+    <button onclick="this.parentNode.remove()" style="background:#dc3545;color:white;border:none;padding:8px 12px;border-radius:4px;cursor:pointer;">✕</button>
+  `;
+
+        // Handle file/text toggle
+        const select = row.querySelector("select");
+        const valueInput = row.querySelector('input[placeholder="Value"]');
+        const fileInput = row.querySelector('input[type="file"]');
+
+        select.onchange = function () {
+          if (this.value === "file") {
+            valueInput.style.display = "none";
+            fileInput.style.display = "block";
+          } else {
+            valueInput.style.display = "block";
+            fileInput.style.display = "none";
+          }
+        };
+
+        container.appendChild(row);
+      }
+
+      function addUrlencodedEntry() {
+        const container = document.getElementById("urlencodedContainer");
+        const row = document.createElement("div");
+        row.className = "kv-row";
+        row.innerHTML = `
+    <input placeholder="Key" />
+    <input placeholder="Value" />
+    <button onclick="this.parentNode.remove()" style="background:#dc3545;color:white;border:none;padding:8px 12px;border-radius:4px;cursor:pointer;">✕</button>
+  `;
+        container.appendChild(row);
+      }
+
+      function getBodyData() {
+        const bodyType = document.querySelector(
+          'input[name="bodyType"]:checked'
+        ).value;
+
+        switch (bodyType) {
+          case "none":
+            return null;
+
+          case "form-data":
+            const formData = new FormData();
+            document
+              .querySelectorAll("#formDataContainer .form-data-row")
+              .forEach((row) => {
+                const key = row.children[0].value.trim();
+                const type = row.children[1].value;
+                if (key) {
+                  if (type === "file") {
+                    const file = row.children[3].files[0];
+                    if (file) formData.append(key, file);
+                  } else {
+                    const value = row.children[2].value;
+                    formData.append(key, value);
+                  }
+                }
+              });
+            return formData;
+
+          case "x-www-form-urlencoded":
+            const params = new URLSearchParams();
+            document
+              .querySelectorAll("#urlencodedContainer .kv-row")
+              .forEach((row) => {
+                const key = row.children[0].value.trim();
+                const value = row.children[1].value;
+                if (key) params.append(key, value);
+              });
+            return params.toString();
+
+          case "raw":
+            try {
+              return JSON.stringify(editor.get());
+            } catch (e) {
+              return editor.getText();
+            }
+
+          case "binary":
+            const file = document.getElementById("binaryFile").files[0];
+            return file || null;
+
+          case "graphql":
+            const query = document.getElementById("graphqlQuery").value;
+            const variables = document.getElementById("graphqlVariables").value;
+            try {
+              return JSON.stringify({
+                query: query,
+                variables: variables ? JSON.parse(variables) : {},
+              });
+            } catch (e) {
+              return JSON.stringify({ query: query });
+            }
+
+          default:
+            return null;
+        }
+      }
+
+      function getContentType() {
+        const bodyType = document.querySelector(
+          'input[name="bodyType"]:checked'
+        ).value;
+
+        switch (bodyType) {
+          case "form-data":
+            return null; // Let browser set multipart/form-data with boundary
+          case "x-www-form-urlencoded":
+            return "application/x-www-form-urlencoded";
+          case "raw":
+            const rawType = document.getElementById("rawType").value;
+            return rawType === "json" ? "application/json" : "text/plain";
+          case "binary":
+            return "application/octet-stream";
+          case "graphql":
+            return "application/json";
+          default:
+            return null;
+        }
+      }
+      function switchAuthType(type) {
+        // Hide all auth sections
+        document.querySelectorAll(".auth-section").forEach((section) => {
+          section.style.display = "none";
+        });
+
+        // Show selected auth type
+        const authTypeMap = {
+          none: "noAuth",
+          bearer: "bearerAuth",
+          basic: "basicAuth",
+          "api-key": "apiKeyAuth",
+        };
+
+        const elementId = authTypeMap[type];
+        if (elementId) {
+          document.getElementById(elementId).style.display = "block";
+        }
+      }
+      function getAuthHeaders() {
+        const authType = document.querySelector(
+          'input[name="authType"]:checked'
+        ).value;
+        const authHeaders = [];
+
+        switch (authType) {
+          case "bearer":
+            const bearerToken = document
+              .getElementById("bearerToken")
+              .value.trim();
+            if (bearerToken) {
+              authHeaders.push(["Authorization", `Bearer ${bearerToken}`]);
+            }
+            break;
+
+          case "basic":
+            const username = document
+              .getElementById("basicUsername")
+              .value.trim();
+            const password = document
+              .getElementById("basicPassword")
+              .value.trim();
+            if (username || password) {
+              const credentials = btoa(`${username}:${password}`);
+              authHeaders.push(["Authorization", `Basic ${credentials}`]);
+            }
+            break;
+
+          case "api-key":
+            const keyName = document.getElementById("apiKeyName").value.trim();
+            const keyValue = document
+              .getElementById("apiKeyValue")
+              .value.trim();
+            const keyLocation = document.getElementById("apiKeyLocation").value;
+
+            if (keyName && keyValue && keyLocation === "header") {
+              authHeaders.push([keyName, keyValue]);
+            }
+            break;
+        }
+
+        return authHeaders;
+      }
+      function getAuthParams() {
+        const authType = document.querySelector(
+          'input[name="authType"]:checked'
+        ).value;
+        const authParams = [];
+
+        if (authType === "api-key") {
+          const keyName = document.getElementById("apiKeyName").value.trim();
+          const keyValue = document.getElementById("apiKeyValue").value.trim();
+          const keyLocation = document.getElementById("apiKeyLocation").value;
+
+          if (keyName && keyValue && keyLocation === "query") {
+            authParams.push([keyName, keyValue]);
+          }
+        }
+
+        return authParams;
+      }
+    </script>
+  </body>
+</html>
