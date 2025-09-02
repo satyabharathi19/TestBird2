@@ -1,21 +1,28 @@
 const express = require("express");
-const mysql = require("mysql");
 const cors = require("cors");
 require('dotenv').config();
 
 const app = express();
 app.use(express.static('public'));
-app.use(express.json()); // Enable JSON parsing
+app.use(express.json()); 
 app.use(cors());
+const mysql = require("mysql2");
 
-const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT) || 10
+const pool = mysql.createConnection({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
 
+pool.connect((err) => {
+  if (err) {
+    console.error("Database connection failed: " + err.stack);
+    return;
+  }
+  console.log("Connected to Railway MySQL database!");
+});
 app.post("/signup", (req, res) => {
     const { username, email, password } = req.body;
 
